@@ -34,7 +34,7 @@ def get_streets_from_district(district):
 
     soup = BeautifulSoup(data, 'html.parser')
     for table in soup.findAll('table'):
-        if 'strasse' in table.get('class'):
+        if 'strassen' in table.get('class'):
             for tr in table.findAll('tr'):
                 yield tr
 
