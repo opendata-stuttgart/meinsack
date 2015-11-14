@@ -50,3 +50,9 @@ def extract_street_from_tr(tr):
         'city': x.groupdict().get('city'),
         'zipcode': x.groupdict().get('zipcode'), 
     }
+
+
+def add_street_to_database(data, district):
+    from main.models import Street 
+    street, created = Street.objects.get_or_create(district=district, **data)
+    return street

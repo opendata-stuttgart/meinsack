@@ -1,7 +1,7 @@
 import responses
 import os.path
 import pytest
-from main.utils import get_districts_stuttgart, add_district_to_database, extract_district_from_tr, extract_street_from_tr, get_streets_from_district
+from main.utils import get_districts_stuttgart, add_district_to_database, extract_district_from_tr, extract_street_from_tr, get_streets_from_district, add_street_to_database
 
 
 @pytest.fixture
@@ -34,6 +34,17 @@ def stuttgart_districts_process(mocked_district):
             continue
         x = extract_district_from_tr(tr)
         add_district_to_database(x)
+
+
+@pytest.fixture
+def stuttgart_streets_hausen_process(mocked_streets_hausen):
+    from main.models import District
+    for index, tr in enumerate(mocked_streets_hausen):
+        if index == 0:
+            # ignore head
+            continue
+        x = extract_street_from_tr(tr)
+        add_street_to_database(x, District.objects.first())
 
 
 @pytest.fixture
@@ -77,4 +88,12 @@ class TestStreet():
                 # ignore head
                 continue
             x = extract_street_from_tr(tr)
+            assert x['name']  == 'Gerlinger Str.'
+            assert x['zipcode'] == '70499'
+            assert x['city'] == 'Stuttgart-Hausen'
             break  # one is enough
+
+    def test_add_district_to_database(self, stuttgart_streets_hausen_process): 
+        from main.models import Street
+        assert Street.objects.count() == 7 
+        assert Street.objects.filter(name="Gerlinger Str.")
