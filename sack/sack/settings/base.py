@@ -30,6 +30,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
     # Local apps
+    'main',
 )
 
 MIDDLEWARE_CLASSES = (
