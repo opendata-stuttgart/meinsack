@@ -10,6 +10,7 @@ def stuttgart_districts():
                         'stuttgart_districts.html')
 
 
+@pytest.mark.django_db
 class TestDistrict():
 
     def test_district_import(self, stuttgart_districts):
@@ -32,6 +33,7 @@ class TestDistrict():
                 # ignore head
                 continue
             x = extract_data_from_tr(tr)
-            add_district_to_database(x)
-            # FIXME
+            district = add_district_to_database(x)
+            assert district.name == x['name']
+            print(district.__dict__)
             break  # one is enough

@@ -26,4 +26,6 @@ def extract_data_from_tr(tr):
 
 
 def add_district_to_database(data):
-    pass
+    from main.models import District
+    district, created = District.objects.get_or_create(**data)
+    return district
