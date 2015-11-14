@@ -15,7 +15,7 @@ def get_districts_stuttgart(data_source=None):
                 yield tr
 
 
-def extract_data_from_tr(tr):
+def extract_district_from_tr(tr):
     data = list(tr.children)
     return {
         'name': data[0].a.text,
@@ -29,3 +29,19 @@ def add_district_to_database(data):
     from main.models import District
     district, created = District.objects.get_or_create(**data)
     return district
+
+
+def get_streets_from_district(district):
+    url = district.url_onlinestreet
+    data = requests.get(url).text
+
+    soup = BeautifulSoup(data, 'html.parser')
+    for table in soup.findAll('table'):
+        if 'strasse' in table.get('class'):
+            for tr in table.findAll('tr'):
+                yield tr
+
+
+def extract_street_from_tr(tr):
+    data = list(tr.children)
+    print(data)
