@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+import re
 
 
 def get_districts_stuttgart():
@@ -41,4 +42,11 @@ def get_streets_from_district(district):
 
 def extract_street_from_tr(tr):
     data = list(tr.children)
-    print(data)
+    p = re.compile(r'(?P<street>.*)\s+(?P<zipcode>[0-9]{5})\s+(?P<city>.*)')
+    x = re.search(p, data[0].a.text)
+    return {
+        'url_onlinestreet': data[0].a['href'],
+        'name': x.groupdict().get('street'), 
+        'city': x.groupdict().get('city'),
+        'zipcode': x.groupdict().get('zipcode'), 
+    }
