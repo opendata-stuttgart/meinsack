@@ -2,12 +2,9 @@ from bs4 import BeautifulSoup
 import requests
 
 
-def get_districts_stuttgart(data_source=None):
-    if not data_source:
-        url = 'http://onlinestreet.de/strassen/in-Stuttgart.html'
-        data = requests.get(url).text
-    else:
-        data = open(data_source).read()
+def get_districts_stuttgart():
+    url = 'http://onlinestreet.de/strassen/in-Stuttgart.html'
+    data = requests.get(url).text
     soup = BeautifulSoup(data, 'html.parser')
     for table in soup.findAll('table'):
         if 'blz' in table.get("class"):
