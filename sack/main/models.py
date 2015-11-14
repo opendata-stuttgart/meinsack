@@ -7,3 +7,11 @@ class District(TimeStampedModel):
     city = models.CharField(max_length=255)
     number_of_streets = models.IntegerField()
     url_onlinestreet = models.URLField()
+
+
+class Street(TimeStampedModel):
+    name = models.CharField(max_length=255)
+    district = models.ForeignKey('District')
+    url_onlinestreet = models.URLField()
+    zipcode = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
