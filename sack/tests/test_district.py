@@ -10,6 +10,16 @@ def stuttgart_districts():
                         'stuttgart_districts.html')
 
 
+@pytest.fixture
+def stuttgart_districts_process(stuttgart_districts):
+    for index, tr in enumerate(get_districts_stuttgart(stuttgart_districts)):
+        if index == 0:
+            # ignore head
+            continue
+        x = extract_data_from_tr(tr)
+        add_district_to_database(x)
+
+
 @pytest.mark.django_db
 class TestDistrict():
 
@@ -27,13 +37,7 @@ class TestDistrict():
             assert 'name' in x
             break  # one is enough
 
-    def test_add_district_to_database(self, stuttgart_districts):
-        for index, tr in enumerate(get_districts_stuttgart(stuttgart_districts)):
-            if index == 0:
-                # ignore head
-                continue
-            x = extract_data_from_tr(tr)
-            district = add_district_to_database(x)
-            assert district.name == x['name']
-            print(district.__dict__)
-            break  # one is enough
+    def test_add_district_to_database(self, stuttgart_districts_process):
+        from main.models import District
+        assert District.objects.count() == 56
+        assert District.objects.filter(name="Bad Cannstatt")
