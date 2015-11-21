@@ -29,9 +29,6 @@ def mocked_district(stuttgart_districts):
 @pytest.fixture
 def stuttgart_districts_process(mocked_district):
     for index, tr in enumerate(mocked_district):
-        if index == 0:
-            # ignore head
-            continue
         x = extract_district_from_tr(tr)
         add_district_to_database(x)
 
@@ -40,9 +37,6 @@ def stuttgart_districts_process(mocked_district):
 def stuttgart_streets_hausen_process(mocked_streets_hausen):
     from main.models import District
     for index, tr in enumerate(mocked_streets_hausen):
-        if index == 0:
-            # ignore head
-            continue
         x = extract_street_from_tr(tr)
         add_street_to_database(x, District.objects.first())
 
@@ -61,13 +55,10 @@ def mocked_streets_hausen(stuttgart_districts_process, stuttgart_streets_hausen)
 class TestDistrict():
 
     def test_district_import(self, mocked_district):
-        assert len(mocked_district) == 57
+        assert len(mocked_district) == 56
 
     def test_extract_district_from_tr(self, mocked_district):
         for index, tr in enumerate(mocked_district):
-            if index == 0:
-                # ignore head
-                continue
             x = extract_district_from_tr(tr)
             assert isinstance(x, dict)
             assert 'name' in x
@@ -84,9 +75,6 @@ class TestStreet():
 
     def test_extract_street_from_tr(self, mocked_streets_hausen):
         for index, tr in enumerate(mocked_streets_hausen):
-            if index == 0:
-                # ignore head
-                continue
             x = extract_street_from_tr(tr)
             assert x['name']  == 'Gerlinger Str.'
             assert x['zipcode'] == '70499'

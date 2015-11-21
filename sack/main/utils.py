@@ -9,7 +9,9 @@ def get_districts_stuttgart():
     soup = BeautifulSoup(data, 'html.parser')
     for table in soup.findAll('table'):
         if 'blz' in table.get("class"):
-            for tr in table.findAll('tr'):
+            for index, tr in enumerate(table.findAll('tr')):
+                if index == 0:
+                    continue
                 yield tr
 
 
@@ -36,7 +38,9 @@ def get_streets_from_district(district):
     soup = BeautifulSoup(data, 'html.parser')
     for table in soup.findAll('table'):
         if 'strassen' in table.get('class'):
-            for tr in table.findAll('tr'):
+            for index, tr in enumerate(table.findAll('tr')):
+                if index == 0:
+                    continue
                 yield tr
 
 
