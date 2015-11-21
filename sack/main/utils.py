@@ -13,6 +13,7 @@ def get_districts_stuttgart():
                 if index == 0:
                     continue
                 yield tr
+            break
 
 
 def extract_district_from_tr(tr):
