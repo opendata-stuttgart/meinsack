@@ -1,3 +1,12 @@
 from django.contrib import admin
+from .models import District, Street
 
-# Register your models here.
+
+@admin.register(District)
+class DistrictAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Street)
+class StreetAdmin(admin.ModelAdmin):
+    pass
