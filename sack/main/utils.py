@@ -48,6 +48,8 @@ def extract_street_from_tr(tr):
     data = list(tr.children)
     p = re.compile(r'(?P<street>.*)\s+(?P<zipcode>[0-9]{5})\s+(?P<city>.*)')
     x = re.search(p, data[0].a.text)
+    if not x:
+        return None
     return {
         'url_onlinestreet': data[0].a['href'],
         'name': x.groupdict().get('street'), 
@@ -58,5 +60,7 @@ def extract_street_from_tr(tr):
 
 def add_street_to_database(data, district):
     from main.models import Street 
+    if not data:
+        return None
     street, created = Street.objects.get_or_create(district=district, **data)
     return street
