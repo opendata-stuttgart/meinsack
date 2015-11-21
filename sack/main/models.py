@@ -8,6 +8,12 @@ class District(TimeStampedModel):
     number_of_streets = models.IntegerField()
     url_onlinestreet = models.URLField()
 
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
 
 class Street(TimeStampedModel):
     name = models.CharField(max_length=255)
@@ -15,3 +21,9 @@ class Street(TimeStampedModel):
     url_onlinestreet = models.URLField()
     zipcode = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name

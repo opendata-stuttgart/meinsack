@@ -4,9 +4,10 @@ from .models import District, Street
 
 @admin.register(District)
 class DistrictAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['name', 'city']
 
 
 @admin.register(Street)
 class StreetAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['name', 'district', 'zipcode', 'city']
+    list_filter = ['district', 'zipcode']
