@@ -76,12 +76,12 @@ class TestStreet():
     def test_extract_street_from_tr(self, mocked_streets_hausen):
         for index, tr in enumerate(mocked_streets_hausen):
             x = extract_street_from_tr(tr)
-            assert x['name']  == 'Gerlinger Str.'
+            assert x['name'] == 'Gerlinger Str.'
             assert x['zipcode'] == '70499'
             assert x['city'] == 'Stuttgart-Hausen'
             break  # one is enough
 
-    def test_add_district_to_database(self, stuttgart_streets_hausen_process): 
+    def test_add_district_to_database(self, stuttgart_streets_hausen_process):
         from main.models import Street
-        assert Street.objects.count() == 7 
+        assert Street.objects.count() == 7
         assert Street.objects.filter(name="Gerlinger Str.")
