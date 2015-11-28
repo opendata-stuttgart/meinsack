@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='District',
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False, auto_created=True, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
                 ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
                 ('name', models.CharField(max_length=255)),
@@ -23,9 +23,39 @@ class Migration(migrations.Migration):
                 ('url_onlinestreet', models.URLField()),
             ],
             options={
-                'abstract': False,
-                'ordering': ('-modified', '-created'),
-                'get_latest_by': 'modified',
+                'ordering': ['name'],
             },
+        ),
+        migrations.CreateModel(
+            name='Street',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
+                ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
+                ('name', models.CharField(max_length=255)),
+                ('url_onlinestreet', models.URLField()),
+                ('city', models.CharField(max_length=255)),
+                ('district', models.ForeignKey(to='main.District')),
+            ],
+            options={
+                'ordering': ['name'],
+            },
+        ),
+        migrations.CreateModel(
+            name='ZipCode',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
+                ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
+                ('zipcode', models.CharField(max_length=255)),
+            ],
+            options={
+                'ordering': ['zipcode'],
+            },
+        ),
+        migrations.AddField(
+            model_name='street',
+            name='zipcode',
+            field=models.ForeignKey(to='main.ZipCode'),
         ),
     ]

@@ -60,8 +60,11 @@ def extract_street_from_tr(tr):
 
 
 def add_street_to_database(data, district):
-    from main.models import Street 
+    from main.models import Street, ZipCode
     if not data:
         return None
+    zipcode = data.pop("zipcode")
+    zipcode, created = ZipCode.objects.get_or_create(zipcode=zipcode)
+    data["zipcode"] = zipcode
     street, created = Street.objects.get_or_create(district=district, **data)
     return street
