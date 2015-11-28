@@ -1,7 +1,8 @@
 # coding=utf-8
+from django.conf.urls import include, url, patterns
 from rest_framework.routers import Route, SimpleRouter
 
-from .views import ZipCodeViewSet
+from .views import ZipCodeViewSet, StreetViewSet
 
 
 class ZipCodeRouter(SimpleRouter):
@@ -23,4 +24,22 @@ class ZipCodeRouter(SimpleRouter):
 router = ZipCodeRouter()
 router.register('zipcode', ZipCodeViewSet, base_name="zipcode")
 
-urlpatterns = router.urls
+
+class StreetRouter(SimpleRouter):
+    routes = [
+        Route(
+            url=r'^(?P<zipcode>\w+)/{lookup}/$',
+            mapping={'get': 'retrieve'},
+            name='{basename}-detail',
+            initkwargs={'suffix': 'Detail'}
+        ),
+    ]
+
+street_router = StreetRouter()
+street_router.register('street', StreetViewSet, base_name="street")
+
+urlpatterns = patterns(
+    '',
+    url(r'^', include(router.urls)),
+    url(r'^', include(street_router.urls)),
+)

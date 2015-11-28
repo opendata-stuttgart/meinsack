@@ -1,6 +1,51 @@
-from rest_framework import serializers
+from rest_framework import serializers, relations
+from rest_framework.reverse import reverse
 
-from .models import Street
+from .models import Street, ZipCode
+
+
+class StreetDetailSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Street
+        fields = [
+            'name',
+        ]
+        read_only_fields = fields
+
+
+class StreetNestedSerializer(serializers.Serializer):
+    name = serializers.SerializerMethodField()
+    url = serializers.SerializerMethodField()
+
+    def get_url(self, obj):
+        view_name = 'street-detail'
+        url_kwargs = {
+            'name': obj.name,
+            'zipcode': obj.zipcode.zipcode
+        }
+        url = reverse(view_name, kwargs=url_kwargs, request=self.context.get('request'))
+        if url is None:
+            return None
+
+        return relations.Hyperlink(url, obj.name)
+
+    def get_name(self, obj):
+        return obj.name
+
+
+class ZipCodeDetailSerializer(serializers.HyperlinkedModelSerializer):
+    street = serializers.SerializerMethodField()
+
+    def get_street(self, obj):
+        for street in obj.street_set.all():
+            yield StreetNestedSerializer(street, context=self.context).data
+
+    class Meta:
+        model = ZipCode
+        fields = [
+            'zipcode', 'street'
+        ]
+        read_only_fields = fields
 
 
 class ZipCodeListSerializer(serializers.HyperlinkedModelSerializer):
@@ -9,22 +54,8 @@ class ZipCodeListSerializer(serializers.HyperlinkedModelSerializer):
     )
 
     class Meta:
-        model = Street
+        model = ZipCode
         fields = [
-            'zipcode', 'city', 'url'
-        ]
-        read_only_fields = fields
-
-
-class ZipCodeDetailSerializer(serializers.HyperlinkedModelSerializer):
-    street = serializers.SerializerMethodField()
-
-    def get_street(self, obj):
-        return [i.name for i in Street.objects.filter(zipcode=obj.zipcode).order_by('name')]
-
-    class Meta:
-        model = Street
-        fields = [
-            'zipcode', 'city', 'street'
+            'zipcode', 'url'
         ]
         read_only_fields = fields

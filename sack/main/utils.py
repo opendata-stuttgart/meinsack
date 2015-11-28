@@ -45,6 +45,12 @@ def get_streets_from_district(district):
                 yield tr
 
 
+def normalize_street(street):
+    if street.endswith('tr.'):
+        street = street[:-1] + "aße"
+    return street
+
+
 def extract_street_from_tr(tr):
     data = list(tr.children)
     p = re.compile(r'(?P<street>.*)\s+(?P<zipcode>[0-9]{5})\s+(?P<city>.*)')

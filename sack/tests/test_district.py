@@ -1,7 +1,15 @@
 import responses
 import os.path
 import pytest
-from main.utils import get_districts_stuttgart, add_district_to_database, extract_district_from_tr, extract_street_from_tr, get_streets_from_district, add_street_to_database
+from main.utils import (
+    add_district_to_database,
+    add_street_to_database,
+    extract_district_from_tr,
+    extract_street_from_tr,
+    get_districts_stuttgart,
+    get_streets_from_district,
+    normalize_street,
+)
 
 
 @pytest.fixture
@@ -76,7 +84,7 @@ class TestStreet():
     def test_extract_street_from_tr(self, mocked_streets_hausen):
         for index, tr in enumerate(mocked_streets_hausen):
             x = extract_street_from_tr(tr)
-            assert x['name'] == 'Gerlinger Str.'
+            assert x['name'] == 'Gerlinger Straße'
             assert x['zipcode'] == '70499'
             assert x['city'] == 'Stuttgart-Hausen'
             break  # one is enough
@@ -84,4 +92,13 @@ class TestStreet():
     def test_add_district_to_database(self, stuttgart_streets_hausen_process):
         from main.models import Street
         assert Street.objects.count() == 7
-        assert Street.objects.filter(name="Gerlinger Str.")
+        assert Street.objects.filter(name="Gerlinger Straße")
+
+
+class TestNormlizingStreet():
+    @pytest.mark.parametrize(('name', 'name_normalized'), (
+        ('Gerlinger Str.', 'Gerlinger Straße'),
+        ('Gerlingerstr.', 'Gerlingerstraße'),
+    ))
+    def test_normalize_street(self, name, name_normalized):
+        assert normalize_street(name) == name_normalized
