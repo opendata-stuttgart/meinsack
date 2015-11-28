@@ -53,9 +53,9 @@ def extract_street_from_tr(tr):
         return None
     return {
         'url_onlinestreet': data[0].a['href'],
-        'name': x.groupdict().get('street'), 
+        'name': normalize_street(x.groupdict().get('street')),
         'city': x.groupdict().get('city'),
-        'zipcode': x.groupdict().get('zipcode'), 
+        'zipcode': x.groupdict().get('zipcode'),
     }
 
 
