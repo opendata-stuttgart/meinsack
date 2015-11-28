@@ -27,19 +27,16 @@ class ZipCodeDetailSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 
-class ZipCodeListView(generics.ListAPIView):
+class ZipCodeView(generics.ListAPIView):
     authentication_classes = list()
     permission_classes = list()
-    serializer_class = ZipCodeListSerializer
+
+    def get_serializer_class(self):
+        if 'zipcode' in self.kwargs:
+            return ZipCodeDetailSerializer
+        return ZipCodeListSerializer
 
     def get_queryset(self):
+        if 'zipcode' in self.kwargs:
+            return Street.objects.filter(zipcode=self.kwargs['zipcode'])
         return Street.objects.distinct('zipcode').order_by('zipcode')
-
-
-class ZipCodeDetailView(generics.ListAPIView):
-    authentication_classes = list()
-    permission_classes = list()
-    serializer_class = ZipCodeDetailSerializer
-
-    def get_queryset(self):
-        return Street.objects.filter(zipcode=self.kwargs['zipcode'])
