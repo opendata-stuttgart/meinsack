@@ -14,7 +14,7 @@ class ZipCodeRouter(SimpleRouter):
         ),
         Route(
             url=r'^{lookup}/$',
-            mapping={'get': 'list'},
+            mapping={'get': 'retrieve'},
             name='{basename}-detail',
             initkwargs={'suffix': 'Detail'}
         ),

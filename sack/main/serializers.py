@@ -20,7 +20,7 @@ class ZipCodeDetailSerializer(serializers.HyperlinkedModelSerializer):
     street = serializers.SerializerMethodField()
 
     def get_street(self, obj):
-        return obj.name
+        return [i.name for i in Street.objects.filter(zipcode=obj.zipcode).order_by('name')]
 
     class Meta:
         model = Street
