@@ -1,10 +1,11 @@
-from rest_framework import generics
+from rest_framework import viewsets, mixins
 
 from .models import Street
 from .serializers import ZipCodeDetailSerializer, ZipCodeListSerializer
 
 
-class ZipCodeView(generics.ListAPIView):
+class ZipCodeViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    lookup_field = 'zipcode'
     authentication_classes = list()
     permission_classes = list()
 

@@ -1,13 +1,26 @@
 # coding=utf-8
-from rest_framework import routers
-from django.conf.urls import patterns, include, url
+from rest_framework.routers import Route, SimpleRouter
 
-from .views import ZipCodeView
+from .views import ZipCodeViewSet
 
-router = routers.DefaultRouter()
 
-urlpatterns = patterns(
-    '',
-    url(r'^$', ZipCodeView.as_view()),
-    url(r'^(?P<zipcode>\d{5})/$', ZipCodeView.as_view()),
-)
+class ZipCodeRouter(SimpleRouter):
+    routes = [
+        Route(
+            url=r'^$',
+            mapping={'get': 'list'},
+            name='{basename}-list',
+            initkwargs={'suffix': 'List'}
+        ),
+        Route(
+            url=r'^{lookup}/$',
+            mapping={'get': 'list'},
+            name='{basename}-detail',
+            initkwargs={'suffix': 'Detail'}
+        ),
+    ]
+
+router = ZipCodeRouter()
+router.register('zipcode', ZipCodeViewSet, base_name="zipcode")
+
+urlpatterns = router.urls
