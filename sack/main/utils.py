@@ -74,3 +74,46 @@ def add_street_to_database(data, district):
     data["zipcode"] = zipcode
     street, created = Street.objects.get_or_create(district=district, **data)
     return street
+
+
+def replace_umlauts(string):
+    for i, j in (('ß', 'ss'), ('ä', 'ae'), ('ü', 'ue'), ('ö', 'oe')):
+        x = string.replace(i, j)
+        if x != string:
+            yield x
+
+
+def get_possible_street_variants(street_name):
+    result = [street_name]
+
+    result += list(replace_umlauts(street_name))
+
+    other_spacing_variant = None
+    if normalize_street(street_name) != street_name:
+        other_spacing_variant = normalize_street(street_name)
+    if street_name.endswith('traße'):
+        other_spacing_variant = street_name[:-3] + "."
+    if other_spacing_variant:
+        result += [other_spacing_variant]
+        result += list(replace_umlauts(other_spacing_variant))
+
+    other_spacing_variant = None
+    p = re.compile(r'(.*)[^\w]S(tra[ss|ß]e)')
+    x = re.findall(p, street_name)
+    if x:
+        other_spacing_variant = "{}s{}".format(x[0][0], x[0][1])
+    p = re.compile(r'(.*[^\s])s(tra[ss|ß]e)')
+    x = re.findall(p, street_name)
+    if x:
+        other_spacing_variant = "{} S{}".format(x[0][0], x[0][1])
+    if other_spacing_variant:
+        if normalize_street(other_spacing_variant) != other_spacing_variant:
+            result += [normalize_street(street_name)]
+        if other_spacing_variant.endswith('traße'):
+            x = other_spacing_variant[:-3] + "."
+            result += list(replace_umlauts(x))
+            result += [x]
+        result += [other_spacing_variant]
+        result += list(replace_umlauts(other_spacing_variant))
+
+    return set(result)
