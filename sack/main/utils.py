@@ -117,3 +117,83 @@ def get_possible_street_variants(street_name):
         result += list(replace_umlauts(other_spacing_variant))
 
     return set(result)
+
+
+def call_schaal_und_mueller_for_district_id(street, fixture=False):
+    if fixture:
+        import responses
+
+#    if street.schaalundmueller_district_id:
+#        return
+    street_list = get_possible_street_variants(street.name)
+    url = 'http://www.schaal-mueller.de/GelberSackinStuttgart.aspx'
+
+    if fixture:
+        with responses.RequestsMock() as rsps:
+            rsps.add(responses.POST, 'http://www.schaal-mueller.de/GelberSackinStuttgart.aspx',
+                     status=200, body=open(fixture).read(),
+                     content_type='text/html')
+            resp = requests.post(url)
+    else:
+        resp = requests.post(url)
+    soup = BeautifulSoup(resp.text.encode(resp.encoding).decode('utf-8'))
+    viewstate = soup.select("#__VIEWSTATE")[0]['value']
+    stategenerator = soup.select("#__VIEWSTATEGENERATOR")[0]['value']
+    stateencrypted = soup.select("#__VIEWSTATEENCRYPTED")[0]['value']
+    eventvalidation = soup.select("#__EVENTVALIDATION")[0]['value']
+
+    for street_name in street_list:
+        payload = {
+            '__VIEWSTATEGENERATOR': stategenerator,
+            '__VIEWSTATEENCRYPTED': stateencrypted,
+            '__VIEWSTATE': viewstate,
+            '__EVENTVALIDATION': eventvalidation,
+            'dnn$ctr491$View$txtZIP': street.zipcode.zipcode,
+            'dnn$ctr491$View$txtStreet': street_name,
+            'dnn$ctr491$View$btSearchStreets': 'suchen',
+        }
+        if fixture:
+            with responses.RequestsMock() as rsps:
+                rsps.add(responses.POST, 'http://www.schaal-mueller.de/GelberSackinStuttgart.aspx',
+                         status=200, body=open(fixture).read(),
+                         content_type='text/html')
+                resp = requests.post(url, data=payload)
+        else:
+            resp = requests.post(url, data=payload)
+        text = resp.text.encode(resp.encoding).decode('utf-8')
+        x = re.findall(r"javascript:__doPostBack\('ThatStreet', '(\d+)'\)", text)
+        if x:
+            street.schaalundmueller_district_id = int(x[0])
+            street.save()
+            return int(x[0])
+
+
+def call_schaal_und_mueller_district(district_id, fixture=False):
+    if fixture:
+        import responses
+
+    url = 'http://www.schaal-mueller.de/GelberSackinStuttgart.aspx'
+
+    payload = {'__EVENTTARGET': 'ThatStreet'}
+    payload['__EVENTARGUMENT'] = str(district_id)
+    if fixture:
+        with responses.RequestsMock() as rsps:
+            rsps.add(responses.POST, 'http://www.schaal-mueller.de/GelberSackinStuttgart.aspx',
+                     status=200, body=open(fixture).read(),
+                     content_type='text/html')
+            resp = requests.post(url, data=payload)
+    else:
+        resp = requests.post(url, data=payload)
+
+    soup = BeautifulSoup(resp.text.encode(resp.encoding).decode('utf-8'))
+    div = soup.find('div', {'id': 'dnn_ctr491_View_panResults'})
+    if div:
+        area_name = None
+        if div.find('span'):
+            area_name = div.find('span', {'id': 'dnn_ctr491_View_lblResults'}).text
+        if div.find('table'):
+            dates = [span.text for span in div.find('table').findAll('span')]
+            return {
+                'area': area_name,
+                'dates': dates
+            }

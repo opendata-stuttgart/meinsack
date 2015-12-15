@@ -31,7 +31,7 @@ class Street(TimeStampedModel):
     district = models.ForeignKey('District')
     url_onlinestreet = models.URLField()
     city = models.CharField(max_length=255)
-    schaalundmueller_api_name = models.CharField(max_length=255, null=True, blank=True)
+    schaalundmueller_district_id = models.IntegerField(null=True, blank=True)
 
     class Meta:
         ordering = ['name']

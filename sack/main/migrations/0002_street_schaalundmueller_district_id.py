@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='street',
-            name='schaalundmueller_api_name',
-            field=models.CharField(null=True, blank=True, max_length=255),
+            name='schaalundmueller_district_id',
+            field=models.IntegerField(blank=True, null=True),
         ),
     ]
