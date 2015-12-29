@@ -12,3 +12,4 @@ python-dateutil
 pytz
 beautifulsoup4
 responses
+gunicorn
