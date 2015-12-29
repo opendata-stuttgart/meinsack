@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import District, Street, ZipCode
+from .models import District, Street, ZipCode, Area, PickUpDate
 
 
 @admin.register(District)
@@ -16,3 +16,13 @@ class StreetAdmin(admin.ModelAdmin):
 @admin.register(ZipCode)
 class ZipCodeAdmin(admin.ModelAdmin):
     list_display = ['zipcode']
+
+
+@admin.register(Area)
+class AreaAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(PickUpDate)
+class PickUpDateAdmin(admin.ModelAdmin):
+    pass
