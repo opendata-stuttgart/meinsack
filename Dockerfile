@@ -4,7 +4,7 @@ MAINTAINER Stuttgart Python Interest Group
 EXPOSE 8000
 
 USER root
-RUN apt-get update && apt-get install -y ttf-dejavu-core
+RUN apt-get update && apt-get install -y ttf-dejavu-core uwsgi
 RUN easy_install3 -U pip
 
 ADD requirements.txt /opt/code/requirements.txt
