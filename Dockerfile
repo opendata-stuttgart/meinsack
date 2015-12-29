@@ -1,7 +1,7 @@
 FROM aexea/aexea-base
 MAINTAINER Stuttgart Python Interest Group
 
-EXPOSE 8000
+EXPOSE 8010
 
 USER root
 RUN apt-get update && apt-get install -y ttf-dejavu-core
