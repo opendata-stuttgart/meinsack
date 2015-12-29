@@ -9,8 +9,8 @@ class DistrictAdmin(admin.ModelAdmin):
 
 @admin.register(Street)
 class StreetAdmin(admin.ModelAdmin):
-    list_display = ['name', 'district', 'zipcode', 'city']
-    list_filter = ['district', 'zipcode']
+    list_display = ['name', 'district', 'zipcode', 'city', 'schaalundmueller_district_id']
+    list_filter = ['district', 'zipcode', 'schaalundmueller_district_id']
 
 
 @admin.register(ZipCode)
