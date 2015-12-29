@@ -60,7 +60,10 @@ class StreetViewSet(mixins.RetrieveModelMixin,
     @decorators.detail_route(methods=['get'], renderer_classes=(PlainTextRenderer,))
     def ical(self, request, name, zipcode):
         from icalendar import Calendar, Event
-        data = self.queryset.get(name=name, zipcode__zipcode=zipcode)
+        try:
+            data = self.queryset.get(name=name, zipcode__zipcode=zipcode)
+        except Street.DoesNotExist:
+            raise NotFound()
         district_id = data.schaalundmueller_district_id
         try:
             area = Area.objects.get(district_id=district_id)
