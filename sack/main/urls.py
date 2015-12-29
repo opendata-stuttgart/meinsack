@@ -1,6 +1,6 @@
 # coding=utf-8
 from django.conf.urls import include, url, patterns
-from rest_framework.routers import Route, SimpleRouter
+from rest_framework.routers import Route, SimpleRouter, DynamicDetailRoute
 
 from .views import ZipCodeViewSet, StreetViewSet
 
@@ -33,6 +33,11 @@ class StreetRouter(SimpleRouter):
             name='{basename}-detail',
             initkwargs={'suffix': 'Detail'}
         ),
+        DynamicDetailRoute(
+            url=r'^(?P<zipcode>\w+)/{lookup}/{methodnamehyphen}/$',
+            name='{basename}-{methodnamehyphen}',
+            initkwargs={}
+        )
     ]
 
 street_router = StreetRouter()
