@@ -92,6 +92,8 @@ class StreetViewSet(mixins.RetrieveModelMixin,
             data = self.queryset.get(name=name, zipcode__zipcode=zipcode)
         except Street.DoesNotExist:
             raise NotFound()
+        except Street.MultipleObjectsReturned:
+            data = self.queryset.filter(name=name, zipcode__zipcode=zipcode).first()
         district_id = data.schaalundmueller_district_id
         try:
             area = Area.objects.get(district_id=district_id)
