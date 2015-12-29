@@ -50,7 +50,10 @@ class StreetViewSet(mixins.RetrieveModelMixin,
         return None
 
     def retrieve(self, request, name=None, zipcode=None):
-        data = self.queryset.get(name=name, zipcode__zipcode=zipcode)
+        try:
+            data = self.queryset.get(name=name, zipcode__zipcode=zipcode)
+        except Street.DoesNotExist:
+            raise NotFound()
         serializer = StreetDetailSerializer(data)
         return response.Response(serializer.data)
 
