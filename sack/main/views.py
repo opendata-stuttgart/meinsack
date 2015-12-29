@@ -72,7 +72,7 @@ class StreetViewSet(mixins.RetrieveModelMixin,
         cal.add('x-wr-calname', 'meinsack Abholtermine')
         cal.add('x-original-url', 'https://meinsack.click/')
         cal.add('x-wr-caldesc', area.description)
-        for dt in area.dates.all():   # filter(date__gte=datetime.date.today()):
+        for dt in area.dates.filter(date__gte=datetime.date.today()):
             start = dt.date
             event = Event()
             event.add('summary', 'Meinsack Abholtermin')

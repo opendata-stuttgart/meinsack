@@ -1,14 +1,24 @@
+import datetime
 from rest_framework import serializers, relations
 from rest_framework.reverse import reverse
 
-from .models import Street, ZipCode
+from .models import Street, ZipCode, Area
 
 
 class StreetDetailSerializer(serializers.HyperlinkedModelSerializer):
+    dates = serializers.SerializerMethodField()
+
+    def get_dates(self, obj):
+        try:
+            area = Area.objects.get(district_id=obj.schaalundmueller_district_id)
+        except Area.DoesNotExist:
+            return []
+        return [dt.date for dt in area.dates.filter(date__gte=datetime.date.today())]
+
     class Meta:
         model = Street
         fields = [
-            'name',
+            'name', 'dates'
         ]
         read_only_fields = fields
 
