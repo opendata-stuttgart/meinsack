@@ -4,9 +4,37 @@ from rest_framework.response import Response
 from rest_framework import renderers
 from rest_framework import decorators
 from rest_framework.exceptions import NotFound
+from django.views.generic.edit import FormView
+from django.shortcuts import render
+from django.core.urlresolvers import reverse
 
 from .models import Street, ZipCode, Area
 from .serializers import ZipCodeDetailSerializer, ZipCodeListSerializer, StreetDetailSerializer
+
+
+from django import forms
+
+class GetIcalForm(forms.Form):
+    zipcode = forms.CharField(max_length=10)
+    street = forms.CharField(max_length=100)
+
+
+class GetIcalView(FormView):
+    template_name = 'home.html'
+    form_class = GetIcalForm
+    success_url = '/'
+
+    def post(self, request):
+        context = self.get_context_data()
+        form = self.get_form(self.form_class)
+        print("AA")
+        if form.is_valid():
+            zipcode = form.cleaned_data['zipcode']
+            street = form.cleaned_data['street']
+            context['ical_url'] = reverse('street-ical', kwargs={'zipcode': zipcode,
+                                                                 'name': street})
+        print(context)
+        return render(self.request, self.template_name, context)
 
 
 class ZipCodeViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,

@@ -1,0 +1,86 @@
+{% extends "rest_framework/base.html" %}
+
+{% block body %}
+<body class="container">
+  <div class="container-fluid" style="margin-top: 30px">
+
+    <div class="row-fluid">
+      <div class="well" style="width: 600px; margin-left: auto; margin-right: auto">
+        <div class="row-fluid">
+          <div>
+	    Full blown REST-API: <a href="/v1">/v1</a>
+          </div>
+        </div><!-- /row fluid -->
+      </div>
+    </div>
+
+    <div class="row-fluid">
+      <div class="well" style="width: 600px; margin-left: auto; margin-right: auto">
+        <div class="row-fluid">
+          <div>
+            {% block branding %}<h3 style="margin: 0 0 20px;">Meinsack</h3>{% endblock %}
+          </div>
+        </div><!-- /row fluid -->
+
+        <div class="row-fluid">
+          <div>
+            <form action="{#% url 'get_ical' %#}" role="form" method="post">
+              {% csrf_token %}
+              <div id="div_id_zipcode" class="clearfix control-group {% if form.zipcode.errors %}error{% endif %}">
+                <div class="form-group">
+                  <label for="id_zipcode">Zipcode:</label>
+                  <input type="text" name="zipcode" maxlength="10"
+                      autocorrect="off" class="form-control textinput textInput"
+                      id="id_zipcode" required
+                  {% if form.zipcode.errors %}
+                    <p class="text-error">
+                      {{ form.zipcode.errors|striptags }}
+                    </p>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div id="div_id_street" class="clearfix control-group {% if form.street.errors %}error{% endif %}">
+                <div class="form-group">
+                  <label for="id_street">Street:</label>
+                  <input type="text" name="street" maxlength="255"
+                      autocorrect="off" class="form-control textinput textInput"
+                      id="id_street" required
+                  {% if form.street.errors %}
+                    <p class="text-error">
+                      {{ form.street.errors|striptags }}
+                    </p>
+                  {% endif %}
+                </div>
+              </div>
+
+              {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                  <div class="well well-small text-error" style="border: none">{{ error }}</div>
+                {% endfor %}
+              {% endif %}
+
+              <div class="form-actions-no-box">
+                <input type="submit" name="submit" value="Get Ical URL" class="btn btn-primary form-control" id="submit-id-submit">
+              </div>
+            </form>
+          </div>
+        </div><!-- /.row-fluid -->
+      </div><!--/.well-->
+    </div><!-- /.row-fluid -->
+
+  </div><!-- /.container-fluid -->
+
+    {% if ical_url %}
+    <div class="row-fluid">
+      <div class="well" style="width: 600px; margin-left: auto; margin-right: auto">
+        <div class="row-fluid">
+          <div>
+	    <a href="{{ ical_url }}">https://meinsack.click{{ ical_url }}</a>
+          </div>
+        </div><!-- /row fluid -->
+      </div>
+    </div>
+    {% endif %}
+</body>
+{% endblock %}
