@@ -13,3 +13,4 @@ pytz
 beautifulsoup4
 responses
 gunicorn
+uwsgi
