@@ -49,7 +49,7 @@ ROOT_URLCONF = 'sack.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.normpath(os.path.join(SITE_ROOT, 'templates'))],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
