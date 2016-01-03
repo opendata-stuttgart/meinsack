@@ -70,6 +70,7 @@ class StreetViewSet(mixins.RetrieveModelMixin,
     lookup_field = 'name'
     authentication_classes = list()
     permission_classes = list()
+    queryset = Street.objects.all()
 
     def get_serializer_class(self):
         return ZipCodeDetailSerializer
