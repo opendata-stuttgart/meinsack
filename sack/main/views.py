@@ -11,8 +11,8 @@ from django.core.urlresolvers import reverse
 from .models import Street, ZipCode, Area
 from .serializers import ZipCodeDetailSerializer, ZipCodeListSerializer, StreetDetailSerializer
 
-
 from django import forms
+
 
 class GetIcalForm(forms.Form):
     zipcode = forms.CharField(max_length=10)
@@ -27,13 +27,11 @@ class GetIcalView(FormView):
     def post(self, request):
         context = self.get_context_data()
         form = self.get_form(self.form_class)
-        print("AA")
         if form.is_valid():
             zipcode = form.cleaned_data['zipcode']
             street = form.cleaned_data['street']
             context['ical_url'] = reverse('street-ical', kwargs={'zipcode': zipcode,
                                                                  'name': street})
-        print(context)
         return render(self.request, self.template_name, context)
 
 
