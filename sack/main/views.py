@@ -47,7 +47,12 @@ class ZipCodeViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
         return ZipCodeListSerializer
 
     def get_queryset(self):
-        return ZipCode.objects.distinct('zipcode').order_by('zipcode')
+        qs = ZipCode.objects.distinct('zipcode').order_by('zipcode')
+        if not 'zipcode' in self.kwargs:
+            zipcode_filter = self.request.query_params.get('zipcode', None)
+            if zipcode_filter is not None:
+                return qs.filter(zipcode__icontains=zipcode_filter)
+        return qs
 
 
 class PlainTextRenderer(renderers.BaseRenderer):
@@ -65,7 +70,6 @@ class StreetViewSet(mixins.RetrieveModelMixin,
     lookup_field = 'name'
     authentication_classes = list()
     permission_classes = list()
-    queryset = Street.objects.all()
 
     def get_serializer_class(self):
         return ZipCodeDetailSerializer

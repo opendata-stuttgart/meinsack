@@ -47,7 +47,11 @@ class ZipCodeDetailSerializer(serializers.HyperlinkedModelSerializer):
     street = serializers.SerializerMethodField()
 
     def get_street(self, obj):
-        for street in obj.street_set.all():
+        qs = obj.street_set.all()
+        name_filter = self.context['request'].query_params.get('name', None)
+        if name_filter:
+            qs = qs.filter(name__icontains=name_filter)
+        for street in qs:
             yield StreetNestedSerializer(street, context=self.context).data
 
     class Meta:

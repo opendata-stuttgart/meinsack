@@ -1,4 +1,16 @@
 {% extends "rest_framework/base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+{{ block.super }}
+<style>
+.autocomplete-suggestions { border: 1px solid #999; background: #fff; cursor: default; overflow: auto; }
+.autocomplete-suggestion { padding: 10px 5px; font-size: 1.2em; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #f0f0f0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399ff; }
+</style>
+{% endblock style %}
+
 
 {% block body %}
 <body class="container">
@@ -82,5 +94,45 @@
       </div>
     </div>
     {% endif %}
+
+{% block script %}
+{{ block.super }}
+  <script type="text/javascript" src="{% static "js/jquery.autocomplete.min.js" %}"></script>
+ <script>
+  $(function() {
+    var zip_options = {
+      serviceUrl:'/v1/',
+      dataType : 'json',
+      paramName: 'zipcode',
+      transformResult: function(response) {
+          return {
+              suggestions: $.map(response, function(dataItem) {
+                  return { value: dataItem.zipcode };
+              })
+          };
+      }
+    };
+    $("#id_zipcode").autocomplete(zip_options);
+
+    $("#id_street").autocomplete({
+        serviceUrl: function() {
+           return '/v1/' + $("#id_zipcode").val() + '/'
+        },
+        dataType : 'json',
+        paramName: 'name',
+        transformResult: function(response) {
+          return {
+              suggestions: $.map(response.street, function(dataItem) {
+                  return { value: dataItem.name };
+              })
+          };
+        }
+    });
+
+  });
+  </script>
+{% endblock script %}
+
+
 </body>
 {% endblock %}
