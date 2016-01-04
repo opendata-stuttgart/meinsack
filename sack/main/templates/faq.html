@@ -15,7 +15,13 @@
 	    <div class="block-area">
 	      <h1>FAQ</h1>
 
-	      FIXME
+	      <h2>Wie bekomme ich den nächsten Abholtermin für meine Straße aus der API?</h2>
+	      <h3>Python</h3>
+	      <pre>
+import requests
+r = requests.get("https://meinsack.click/v1/70327/Ulmer%20Stra%C3%9Fe/")
+print("Next: {}".format(r.json().get('dates')[0]))
+	      </pre>
 	    </div>	    
           </div>
         </div><!-- /row fluid -->
