@@ -11,7 +11,7 @@ class DistrictAdmin(admin.ModelAdmin):
 class StreetAdmin(admin.ModelAdmin):
     list_display = ['name', 'district', 'zipcode', 'city', 'schaalundmueller_district_id']
     list_filter = ['district', 'zipcode', 'schaalundmueller_district_id']
-    search_fields = ['name', 'zipcode', 'city']
+    search_fields = ['name', 'zipcode__zipcode', 'city']
 
 
 @admin.register(ZipCode)
