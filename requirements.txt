@@ -16,3 +16,4 @@ gunicorn
 uwsgi
 icalendar
 opbeat
+django-cors-headers==1.1.0
