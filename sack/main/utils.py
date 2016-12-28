@@ -197,3 +197,27 @@ def call_schaal_und_mueller_district(district_id, fixture=False):
                 'area': area_name,
                 'dates': dates
             }
+
+
+def parse_schaal_und_mueller_csv_data(filename, year):
+    regex = r"(.*)\ ([0-9\.]*)\ (Mo.|Di.|Mi.|Do.|Fr.)\ ([0-9\.\ ]*)"
+    from main.models import Area
+    with open(filename, 'r') as fp:
+        for line in fp.readlines():
+            if line.startswith('#'):
+                continue
+            # find weekday and split on it
+            area = re.findall(regex, line)[0][0]
+            a = Area.objects.filter(description=area).first()
+            if not a:
+                for in_db, in_csv in (
+                        ('Birkach, Botnang, Plieningen', 'Birkach, Plieningen, Botnang'),
+                        ('Frauenkopf, Hedelfingen (ohne Hafen), Sillenbuch, Riedenberg', 'Frauenkopf, Hedelfingen (ohne Hafen) Sillenbuch (mit Riedenberg)'),
+                        ('Stuttgart-West (ohne Kräherwald, Solitude, Wildpark)', 'Stuttgart-West (ohne Kräherwald, Solitude,Wildpark)'),
+                        ('Bad Cannstatt I (ohneSteinhaldenfeld), Mühlhausen', 'Bad Cannstatt I (ohneSteinhaldenfeld) Mühlhausen'),
+                        ('Büsnau, Degerloch, Dürrlewang, Kräherwald,Solitude, Wildpark', 'Büsnau, Degerloch, Dürrlewang,Kräherwald,Solitude, Wildpark'),
+                ):
+                    if area == in_csv:
+                        a = Area.objects.filter(description=in_db).first()
+            if not a:
+                assert 'Area not found'
