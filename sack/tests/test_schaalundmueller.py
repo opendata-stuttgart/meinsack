@@ -64,6 +64,7 @@ class TestSchaalundmuellerCrawler:
             fixture=schaalundmueller_ulmerstrasse) == 6
         assert mocked_ulmerstrasse.schaalundmueller_district_id == 6
 
+    @pytest.mark.skip
     def test_ulmerstrasse_live(self, mocked_ulmerstrasse, schaalundmueller_ulmerstrasse):
         assert call_schaal_und_mueller_for_district_id(mocked_ulmerstrasse) == 6
         assert mocked_ulmerstrasse.schaalundmueller_district_id == 6
@@ -74,10 +75,12 @@ class TestSchaalundmuellerCrawler:
             fixture=schaalundmueller_daimlerstrasse) == 12
         assert mocked_daimlerstrasse.schaalundmueller_district_id == 12
 
+    @pytest.mark.skip
     def test_daimlerstrasse_live(self, mocked_daimlerstrasse, schaalundmueller_daimlerstrasse):
         assert call_schaal_und_mueller_for_district_id(mocked_daimlerstrasse) == 12
         assert mocked_daimlerstrasse.schaalundmueller_district_id == 12
 
+    @pytest.mark.skip
     def test_district_6_live(self):
         d = call_schaal_und_mueller_district(6)
         assert d['area'] == "Hafen, Unter- und Obertürkheim, Wangen"
