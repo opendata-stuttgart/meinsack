@@ -53,6 +53,7 @@ class TestDistrict():
         from main.models import District
         assert District.objects.count() == 56
         assert District.objects.filter(name="Bad Cannstatt")
+        assert District.objects.filter(name="Büsnau")
 
 
 @pytest.mark.django_db

@@ -5,7 +5,7 @@ import re
 
 def get_districts_stuttgart():
     url = 'http://onlinestreet.de/strassen/in-Stuttgart.html'
-    data = requests.get(url).text
+    data = requests.get(url).content
     soup = BeautifulSoup(data, 'html.parser')
     for table in soup.findAll('table'):
         if 'blz' in table.get("class"):
