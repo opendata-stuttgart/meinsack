@@ -1,22 +1,14 @@
-import responses
 import os.path
 import pytest
+import responses
+
 from main.utils import (
-    add_district_to_database,
     add_street_to_database,
     extract_district_from_tr,
     extract_street_from_tr,
-    get_districts_stuttgart,
     get_streets_from_district,
     normalize_street,
 )
-
-
-@pytest.fixture
-def stuttgart_districts():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                        'fixtures/',
-                        'stuttgart_districts.html')
 
 
 @pytest.fixture
@@ -24,21 +16,6 @@ def stuttgart_streets_hausen():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)),
                         'fixtures/',
                         'stuttgart_streets_hausen.html')
-
-
-@pytest.fixture
-def mocked_district(stuttgart_districts):
-    with responses.RequestsMock() as rsps:
-        rsps.add(responses.GET, 'http://onlinestreet.de/strassen/in-Stuttgart.html',
-                 status=200, body=open(stuttgart_districts).read(), content_type='text/html')
-        return list(get_districts_stuttgart())
-
-
-@pytest.fixture
-def stuttgart_districts_process(mocked_district):
-    for index, tr in enumerate(mocked_district):
-        x = extract_district_from_tr(tr)
-        add_district_to_database(x)
 
 
 @pytest.fixture
