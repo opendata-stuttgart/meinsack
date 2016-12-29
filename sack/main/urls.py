@@ -1,5 +1,5 @@
 # coding=utf-8
-from django.conf.urls import include, url, patterns
+from django.conf.urls import include, url
 from rest_framework.routers import Route, SimpleRouter, DynamicDetailRoute
 
 from .views import ZipCodeViewSet, StreetViewSet
