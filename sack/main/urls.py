@@ -43,8 +43,7 @@ class StreetRouter(SimpleRouter):
 street_router = StreetRouter()
 street_router.register('street', StreetViewSet, base_name="street")
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^', include(street_router.urls)),
-)
+]
