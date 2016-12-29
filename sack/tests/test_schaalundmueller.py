@@ -1,5 +1,8 @@
-import pytest
+import datetime
 import os
+
+import pytest
+
 
 from main.utils import call_schaal_und_mueller_for_district_id, call_schaal_und_mueller_district
 
@@ -115,8 +118,17 @@ class TestSchaalundmuellerDataImporter:
                                       'Büsnau, Degerloch, Dürrlewang, Kräherwald,Solitude, Wildpark')):
             Area.objects.create(description=area, district_id=index, bag_type='gelb', collector='Schaal+Mueller')
 
-    def test_import(self, schaal_und_mueller_areas):
+    @pytest.mark.parametrize(('filename', 'year', 'testarea', 'first_date_in_year', 'dates_in_year'), (
+        ('stuttgart_2017.txt', 2017, 'Birkach, Botnang, Plieningen', datetime.date(2018, 1, 5), 17),
+        ('stuttgart_2017.txt', 2017, 'Stuttgart-Süd', datetime.date(2018, 1, 17), 18),
+        ('stuttgart_2017.txt', 2017, 'Vaihingen (ohne Büsnau, Dürrlewang)', datetime.date(2018, 1, 19), 18),
+    ))
+    def test_import(self, schaal_und_mueller_areas, filename, year, testarea, first_date_in_year, dates_in_year):
         from main.models import District, Area
-        fn = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'main', 'data', 'stuttgart_2017.txt')
+        fn = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'main', 'data', filename)
         from main.utils import parse_schaal_und_mueller_csv_data
-        parse_schaal_und_mueller_csv_data(fn, 2017)
+        parse_schaal_und_mueller_csv_data(fn, year)
+        area = Area.objects.get(description=testarea)
+        assert area.dates.count() == dates_in_year + 1
+        assert area.dates.filter(date__year=year).count() == dates_in_year
+        assert area.dates.filter(date__year=year + 1).first().date == first_date_in_year

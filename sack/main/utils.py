@@ -1,6 +1,8 @@
+import datetime
+import re
+
 from bs4 import BeautifulSoup
 import requests
-import re
 
 
 def get_districts_stuttgart():
@@ -201,7 +203,7 @@ def call_schaal_und_mueller_district(district_id, fixture=False):
 
 def parse_schaal_und_mueller_csv_data(filename, year):
     regex = r"(.*)\ ([0-9\.]*)\ (Mo.|Di.|Mi.|Do.|Fr.)\ ([0-9\.\ ]*)"
-    from main.models import Area
+    from main.models import Area, PickUpDate
     with open(filename, 'r') as fp:
         for line in fp.readlines():
             if line.startswith('#'):
@@ -221,3 +223,11 @@ def parse_schaal_und_mueller_csv_data(filename, year):
                         a = Area.objects.filter(description=in_db).first()
             if not a:
                 assert 'Area not found'
+
+            dates = re.findall(regex, line)[0][3].split()
+            # add years
+            dates_wyears = [i + str(year) for i in dates[:-1]]
+            dates_wyears.append(dates[-1] + str(year + 1))
+            for _ in dates_wyears:
+                dt = datetime.datetime.strptime(_, "%d.%m.%Y").date()
+                PickUpDate.objects.get_or_create(date=dt, area=a)
