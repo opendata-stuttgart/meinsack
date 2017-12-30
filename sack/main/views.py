@@ -6,7 +6,7 @@ from rest_framework import decorators
 from rest_framework.exceptions import NotFound
 from django.views.generic.edit import FormView
 from django.shortcuts import render
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from .models import Street, ZipCode, Area
 from .serializers import ZipCodeDetailSerializer, ZipCodeListSerializer, StreetDetailSerializer

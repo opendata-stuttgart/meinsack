@@ -8,7 +8,7 @@ from main.views import GetIcalView
 
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
 
     url(r'^$', GetIcalView.as_view(), name='get_ical'),
     url(r'^faq/$', TemplateView.as_view(template_name='faq.html'), name='faq'),
