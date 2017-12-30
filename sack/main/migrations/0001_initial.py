@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('url_onlinestreet', models.URLField()),
                 ('city', models.CharField(max_length=255)),
-                ('district', models.ForeignKey(to='main.District')),
+                ('district', models.ForeignKey(to='main.District', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['name'],
@@ -56,6 +56,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='street',
             name='zipcode',
-            field=models.ForeignKey(to='main.ZipCode'),
+            field=models.ForeignKey(to='main.ZipCode', on_delete=models.CASCADE),
         ),
     ]

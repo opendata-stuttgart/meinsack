@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
                 ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
                 ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
                 ('date', models.DateField()),
-                ('area', models.ForeignKey(related_name='dates', to='main.Area')),
+                ('area', models.ForeignKey(related_name='dates', to='main.Area', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['date'],

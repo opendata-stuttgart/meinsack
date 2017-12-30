@@ -27,8 +27,8 @@ class ZipCode(TimeStampedModel):
 
 class Street(TimeStampedModel):
     name = models.CharField(max_length=255)
-    zipcode = models.ForeignKey('zipcode')
-    district = models.ForeignKey('District')
+    zipcode = models.ForeignKey('zipcode', on_delete=models.CASCADE)
+    district = models.ForeignKey('District', on_delete=models.CASCADE)
     url_onlinestreet = models.URLField()
     city = models.CharField(max_length=255)
     schaalundmueller_district_id = models.IntegerField(null=True, blank=True)
@@ -52,7 +52,7 @@ class Area(TimeStampedModel):
 
 class PickUpDate(TimeStampedModel):
     date = models.DateField()
-    area = models.ForeignKey(Area, related_name='dates')
+    area = models.ForeignKey(Area, related_name='dates', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['date']
