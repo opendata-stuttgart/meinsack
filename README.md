@@ -9,10 +9,10 @@
 
 ```
 # database
-docker run -d --restart=always -v /opt/meinsack/postgres:/var/lib/postgresql --name meinsack-db postgres:9.4
+docker run -d --restart=always --name meinsack-db postgres:10
 
 # home
-docker run -d --name home -v /opt/meinsack/data:/home/uid1000/meinsack aexea/aexea-base
+docker run -d --name home -v /home/meinsack/data:/home/uid1000/meinsack aexea/aexea-base
 
 ## build container
 docker build --tag=meinsack-prod .
@@ -21,7 +21,8 @@ docker build --tag=meinsack-prod .
 docker run --rm -ti --volumes-from home -v `pwd`/sack/sack/settings/production.py:/opt/code/sack/sack/settings/production.py --link meinsack-db:db -e DJANGO_SETTINGS_MODULE=sack.settings.production --entrypoint python3 meinsack-prod manage.py reset_db
 docker run --rm -ti --volumes-from home -v `pwd`/sack/sack/settings/production.py:/opt/code/sack/sack/settings/production.py --link meinsack-db:db -e DJANGO_SETTINGS_MODULE=sack.settings.production --entrypoint python3 meinsack-prod manage.py migrate
 docker run --rm -ti --volumes-from home -v `pwd`/sack/sack/settings/production.py:/opt/code/sack/sack/settings/production.py --link meinsack-db:db -e DJANGO_SETTINGS_MODULE=sack.settings.production --entrypoint python3 meinsack-prod manage.py createsuperuser
-## get data
+
+## get data (or use backup)
 docker run --rm -ti --volumes-from home -v `pwd`/sack/sack/settings/production.py:/opt/code/sack/sack/settings/production.py --link meinsack-db:db -e DJANGO_SETTINGS_MODULE=sack.settings.production --entrypoint python3 meinsack-prod manage.py get_streets
 docker run --rm -ti --volumes-from home -v `pwd`/sack/sack/settings/production.py:/opt/code/sack/sack/settings/production.py --link meinsack-db:db -e DJANGO_SETTINGS_MODULE=sack.settings.production --entrypoint python3 meinsack-prod manage.py schaalundmueller
 docker run --rm -ti --volumes-from home -v `pwd`/sack/sack/settings/production.py:/opt/code/sack/sack/settings/production.py --link meinsack-db:db -e DJANGO_SETTINGS_MODULE=sack.settings.production --entrypoint python3 meinsack-prod manage.py schaalundmueller_districts
@@ -29,3 +30,11 @@ docker run --rm -ti --volumes-from home -v `pwd`/sack/sack/settings/production.p
 # python
 ./update.sh
 ```
+
+
+### import database dump
+
+```
+cat meinsack.pgdump | docker exec -i meinsack-db pg_restore -U postgres -d meinsack
+```
+
