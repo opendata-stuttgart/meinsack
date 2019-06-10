@@ -1,11 +1,11 @@
 requests
-Django<2.1
+Django<2.2
 django-extensions
 django-filter
 django-flat-theme
-djangorestframework==3.7.7
+djangorestframework<3.8  # 3.8.x breaks our custom routers - need fix!
 ipython
-psycopg2==2.6
+psycopg2-binary==2.8.2
 pytest-django==3.1.2
 pytest==3.0.5
 python-dateutil
@@ -15,5 +15,4 @@ responses
 gunicorn
 uwsgi
 icalendar
-opbeat
 django-cors-headers==2.1.0
