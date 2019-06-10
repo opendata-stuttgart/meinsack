@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.7
 MAINTAINER Stuttgart Python Interest Group
 
 EXPOSE 8010
