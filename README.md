@@ -38,3 +38,10 @@ docker run --rm -ti --volumes-from home -v `pwd`/sack/sack/settings/production.p
 cat meinsack.pgdump | docker exec -i meinsack-db pg_restore -U postgres -d meinsack
 ```
 
+### add new data for a year on production server
+
+example for stuttgart 2020
+
+```
+docker run --rm --link meinsack-db:db -e DJANGO_SETTINGS_MODULE=sack.settings.production --entrypoint "python" meinsack-prod manage.py schaalundmueller_datafile_parsing --filename /opt/code/sack/main/data/stuttgart_2020.txt --year 2020
+```
