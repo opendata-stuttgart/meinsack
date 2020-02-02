@@ -38,6 +38,12 @@ import requests
 r = requests.get("https://meinsack.click/v1/70327/Ulmer%20Stra%C3%9Fe/")
 print("Next: {}".format(r.json().get('dates')[0]))
 	      </pre>
+              <h3>R</h3>
+	      <pre>
+library(httr)
+r = GET(url="https://meinsack.click/v1/70327/Ulmer%20Stra%C3%9Fe/")
+sprintf("Next: %s", content(r)$dates[[1]])
+              </pre>
 	    </div>	    
           </div>
         </div><!-- /row fluid -->
