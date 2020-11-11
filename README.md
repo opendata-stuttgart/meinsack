@@ -1,5 +1,12 @@
 # meinsack - gelber Sack API
 
+This version is unmaintained!
+
+The new version is using Datasette + SQLite:
+- Site: https://meinsack.click/
+- Code: https://github.com/mfa/meinsack-datasette
+
+
 ## run testsuite
 
 ``docker exec -ti meinsack_web_1 py.test --nomigrations -s --pdb``
